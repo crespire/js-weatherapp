@@ -1,30 +1,35 @@
 console.log('Loaded!');
-const apiKey = 'f5b634be2902a2f2705ec97c6d2128c7';
+const owmKey = 'f5b634be2902a2f2705ec97c6d2128c7';
 
-const getLatLonFromName = function(location) {
-  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=2&appid=${apiKey}`)
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-    .then((data) => {
-      try {
-        console.log(data);
-        console.log(`API string for ${location}: lat=${data[0].lat}&lon=${data[0].lon}`);
-      }
-      catch(error) {
-        if (error.message.includes('undefined')) {
-          console.log(`Empty response from API.`);
-        } 
-        console.log(error);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+async function getLocationWeather(location) {
+  const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${owmKey}`);
+  const responseJson = await response.json();
+  return responseJson;
 }
 
-const getWeather = () => {
+async function getUserWeather() {
+  if (window.navigator.geolocation) {
+    const locationPermissionGranted = (position) => {
+      console.log('Location permission granted.');
+      let coords = [position.coords.latitude, position.coords.longitude];
+      console.log(coords);
+      fetchData(coords);
+    }
+
+    const locationPermissionDenied = () => {
+      console.log('Location permission denied.');
+    }
+
+    let result = await window.navigator.geolocation.getCurrentPosition(locationPermissionGranted, locationPermissionDenied);
+    return result;
+  } else {
+    console.error('Location permission not supported.');
+  }
 }
 
-getLatLonFromName('Toronto');
+async function fetchData(coords) {
+  let [lat, lon] = coords;
+  const response = await fetch(`http://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${owmKey}`);
+}
+
+// getUserWeather();
