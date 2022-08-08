@@ -9,6 +9,20 @@
 </head>
 <body>
   <div id="main">
+    <label for="location">Location: </label>
+    <input id="location" type="text" required />
+    <fieldset>
+        <legend>Units</legend>
+
+        <label for="metric">Metric</label>
+        <input type="radio" id="metric" value="metric" name="units" checked></input>
+        
+        <label for="imperial">Imperial</label>
+        <input type="radio" id="imperial" value="imperial" name="units"></input>
+    </fieldset>
+    <input type="submit" value="Go!" />
+    <div id="weather">
+    </div>
   </div>
 </body>
 </html>
